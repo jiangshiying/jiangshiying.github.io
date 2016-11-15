@@ -39,17 +39,20 @@ review&lt;-book$review
 
 <p><strong>Data preprocessing</strong></p>
 
-<p>First of all, load all package that used in this case
-    library(tm)
-    library(ggdendro)
-    library(fpc) 
-    library(lda)
-    library(dplyr)
-    require(magrittr)
-    library(stringr)
-    library(LDAvis)
-    library(servr) 
-Create a stopword list. In this case, besides words in stopwords dictionary I add "book" in stopwords list.  </p>
+<p>First of all, load all package that used in this case</p>
+
+<pre><code>library(tm)
+library(ggdendro)
+library(fpc) 
+library(lda)
+library(dplyr)
+require(magrittr)
+library(stringr)
+library(LDAvis)
+library(servr) 
+</code></pre>
+
+<p>Create a stopword list. In this case, besides words in stopwords dictionary I add "book" in stopwords list.  </p>
 
 <pre><code>#create stop word set, including general stop word and "book"
 
@@ -76,7 +79,7 @@ doc.list&lt;-strsplit(review,"[[:space:]]+")
 term.table &lt;- table(unlist(doc.list))
 term.table &lt;- sort(term.table, decreasing = TRUE)
 
-# remove terms that are stop words or occur fewer than 5 times:
+#remove terms that are stop words or occur fewer than 5 times
 del &lt;- names(term.table) %in% stop_words | term.table &lt; 5
 term.table &lt;- term.table[!del]
 term.table &lt;- term.table[names(term.table) != ""]
@@ -95,13 +98,14 @@ documents &lt;- lapply(doc.list, get.terms)
 
 <p><strong>Using the R package 'lda' for model fitting</strong></p>
 
-<p>Use LAD method to anaysis for 20 topics and iterate 5000 times, and record the time that spent.
-    K &lt;- 20 #topic number
-    G &lt;- 5000 #iteration number 
-    alpha &lt;- 0.02
-    eta &lt;- 0.02</p>
+<p>Use LAD method to anaysis for 20 topics and iterate 5000 times, and record the time that spent.</p>
 
-<pre><code>set.seed(357)
+<pre><code>K &lt;- 20 #topic number
+G &lt;- 5000 #iteration number 
+alpha &lt;- 0.02
+eta &lt;- 0.02
+
+set.seed(357)
 t1 &lt;- Sys.time()
 fit &lt;- lda.collapsed.gibbs.sampler(documents = documents, K = K, vocab = vocab, 
                                num.iterations = G, alpha = alpha, 
