@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>book review case  by jiangshiying</title>
+    <title>topic model of book review  by jiangshiying</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,38 +11,121 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">book review case </h1>
-      <h2 class="project-tagline">topic model of book review </h2>
+      <h1 class="project-name">topic model of book review </h1>
+      <h2 class="project-tagline"></h2>
     </section>
 
     <section class="main-content">
       <h1>
-<a id="jiangshiyinggithubio" class="anchor" href="#jiangshiyinggithubio" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>jiangshiying.github.io</h1>
+<a id="a-case-of-ladvis" class="anchor" href="#a-case-of-ladvis" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>A case of LADvis</h1>
 
-<p>topic model of book review</p>
-
-<p>The result of LAD visualization <a href="http://jiangshiying.github.io/vis">http://jiangshiying.github.io/vis</a></p>
+<p>The result of LAD visualization: <a href="http://jiangshiying.github.io/vis">http://jiangshiying.github.io/vis</a></p>
 
 <p><strong>Data collection</strong></p>
 
 <p>Books review data from Amazon which includes 3189 positive and negative reviews.
 Data source: <a href="https://www.cs.jhu.edu/%7Emdredze/datasets/sentiment/index2.html">https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html</a></p>
 
-<p><code>#books review data, data source:https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html
-book&lt;-read.csv("assignment8/review.csv",header=T,stringsAsFactors = F)
-dim(book)
-review&lt;-book$review</code></p>
+<pre><code>book&lt;-read.csv("assignment8/review.csv",header=T,stringsAsFactors = F)
 
-<p><strong>Data preprocessing</strong>
-<code>#books review data, data source:https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html
-book&lt;-read.csv("assignment8/review.csv",header=T,stringsAsFactors = F)
 dim(book)
-review&lt;-book$review</code></p>
 
-<p><code>#create stop word set, including general stop word and "book"
+review&lt;-book$review
+</code></pre>
+
+<p><strong>Data preprocessing</strong></p>
+
+<p>First of all, load all package that used in this case
+    library(tm)
+    library(ggdendro)
+    library(fpc) 
+    library(lda)
+    library(dplyr)
+    require(magrittr)
+    library(stringr)
+    library(LDAvis)
+    library(servr) 
+Create a stopword list. In this case, besides words in stopwords dictionary I add "book" in stopwords list.  </p>
+
+<pre><code>#create stop word set, including general stop word and "book"
+
 stop_words=stopwords("SMART")
 stop_words=c(stop_words,"book")
-stop_words=tolower(stop_words)</code></p>
+stop_words=tolower(stop_words)
+</code></pre>
+
+<p>Then , tokenize the text, remove the stopwords and remove the words that occur less than 5 times.</p>
+
+<pre><code>review &lt;- gsub("'", "", review) # remove apostrophes
+review &lt;- gsub("[[:punct:]]", " ", review)  # replace punctuation with space
+review &lt;- gsub("[[:cntrl:]]", " ", review)  # replace control characters with space
+review &lt;- gsub("^[[:space:]]+", "", review) # remove whitespace at beginning of documents
+review &lt;- gsub("[[:space:]]+$", "", review) # remove whitespace at end of documents
+review &lt;- gsub("[^a-zA-Z -]", " ", review) # allows only letters
+review &lt;- tolower(review)  # force to lowercase
+
+review&lt;-review[review!=""]
+
+doc.list&lt;-strsplit(review,"[[:space:]]+")
+
+#create dictionary
+term.table &lt;- table(unlist(doc.list))
+term.table &lt;- sort(term.table, decreasing = TRUE)
+
+# remove terms that are stop words or occur fewer than 5 times:
+del &lt;- names(term.table) %in% stop_words | term.table &lt; 5
+term.table &lt;- term.table[!del]
+term.table &lt;- term.table[names(term.table) != ""]
+vocab &lt;- names(term.table)
+</code></pre>
+
+<p>Use function to formalize corpus for LAD analysis.</p>
+
+<pre><code>get.terms &lt;- function(x) {
+  index &lt;- match(x, vocab)
+  index &lt;- index[!is.na(index)]
+  rbind(as.integer(index - 1), as.integer(rep(1, length(index))))
+}
+documents &lt;- lapply(doc.list, get.terms)
+</code></pre>
+
+<p><strong>Using the R package 'lda' for model fitting</strong>
+Use LAD method to anaysis for 20 topics and iterate 5000 times, and record the time that spent.
+    K &lt;- 20 #topic number
+    G &lt;- 5000 #iteration number 
+    alpha &lt;- 0.02
+    eta &lt;- 0.02</p>
+
+<pre><code>set.seed(357)
+t1 &lt;- Sys.time()
+fit &lt;- lda.collapsed.gibbs.sampler(documents = documents, K = K, vocab = vocab, 
+                               num.iterations = G, alpha = alpha, 
+                               eta = eta, initial = NULL, burnin = 0,
+                               compute.log.likelihood = TRUE)
+t2 &lt;- Sys.time()
+t2-t1
+</code></pre>
+
+<p><strong>visualization</strong>
+Use LADvis package to do the visualization. </p>
+
+<pre><code>#document-term distribution matrix
+theta &lt;- t(apply(fit$document_sums + alpha, 2, function(x) x/sum(x)))
+#term-word distribution matrix
+phi &lt;- t(apply(t(fit$topics) + eta, 2, function(x) x/sum(x)))
+doc.length &lt;- sapply(documents, function(x) sum(x[2, ])) 
+
+# create the JSON object to feed the visualization:
+json &lt;- createJSON(phi = phi,
+                 theta = theta,
+                 doc.length = doc.length,
+                 vocab = vocab,
+                 term.frequency = term.frequency)
+
+serVis(json, out.dir = 'vis', open.browser = TRUE)
+</code></pre>
+
+<p>Code:</p>
 
       <footer class="site-footer">
 
