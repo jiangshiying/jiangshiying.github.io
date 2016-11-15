@@ -8,9 +8,7 @@ The result of LAD visualization: [http://jiangshiying.github.io/vis](http://jian
 Books review data from Amazon which includes 3189 positive and negative reviews.
 Data source: [https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html](https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html)
 
-`#books review data, data source:https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html
-
-book<-read.csv("assignment8/review.csv",header=T,stringsAsFactors = F)
+`book<-read.csv("assignment8/review.csv",header=T,stringsAsFactors = F)
 
 dim(book)
 
