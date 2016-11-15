@@ -19,7 +19,30 @@
       <h1>
 <a id="jiangshiyinggithubio" class="anchor" href="#jiangshiyinggithubio" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>jiangshiying.github.io</h1>
 
-<p>topic model of book review </p>
+<p>topic model of book review</p>
+
+<p>The result of LAD visualization <a href="http://jiangshiying.github.io/vis">http://jiangshiying.github.io/vis</a></p>
+
+<p><strong>Data collection</strong></p>
+
+<p>Books review data from Amazon which includes 3189 positive and negative reviews.
+Data source: <a href="https://www.cs.jhu.edu/%7Emdredze/datasets/sentiment/index2.html">https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html</a></p>
+
+<p><code>#books review data, data source:https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html
+book&lt;-read.csv("assignment8/review.csv",header=T,stringsAsFactors = F)
+dim(book)
+review&lt;-book$review</code></p>
+
+<p><strong>Data preprocessing</strong>
+<code>#books review data, data source:https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html
+book&lt;-read.csv("assignment8/review.csv",header=T,stringsAsFactors = F)
+dim(book)
+review&lt;-book$review</code></p>
+
+<p><code>#create stop word set, including general stop word and "book"
+stop_words=stopwords("SMART")
+stop_words=c(stop_words,"book")
+stop_words=tolower(stop_words)</code></p>
 
       <footer class="site-footer">
 

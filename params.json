@@ -1,6 +1,6 @@
 {
   "name": "book review case ",
   "tagline": "topic model of book review ",
-  "body": "# jiangshiying.github.io\r\ntopic model of book review \r\n",
+  "body": "# jiangshiying.github.io\r\ntopic model of book review\r\n\r\nThe result of LAD visualization [http://jiangshiying.github.io/vis](http://jiangshiying.github.io/vis)\r\n\r\n**Data collection**\r\n\r\nBooks review data from Amazon which includes 3189 positive and negative reviews.\r\nData source: [https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html](https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html)\r\n\r\n`#books review data, data source:https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html\r\nbook<-read.csv(\"assignment8/review.csv\",header=T,stringsAsFactors = F)\r\ndim(book)\r\nreview<-book$review`\r\n\r\n**Data preprocessing**\r\n`#books review data, data source:https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html\r\nbook<-read.csv(\"assignment8/review.csv\",header=T,stringsAsFactors = F)\r\ndim(book)\r\nreview<-book$review`\r\n\r\n`#create stop word set, including general stop word and \"book\"\r\nstop_words=stopwords(\"SMART\")\r\nstop_words=c(stop_words,\"book\")\r\nstop_words=tolower(stop_words)`",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
