@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>topic model of book review  by jiangshiying</title>
+    <title>Topic Model of Book Review  by jiangshiying</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,7 +11,7 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">topic model of book review </h1>
+      <h1 class="project-name">Topic Model of Book Review </h1>
       <h2 class="project-tagline"></h2>
     </section>
 
@@ -23,8 +23,9 @@
 
 <p><strong>Data collection</strong></p>
 
-<p>Books review data from Amazon which includes 3189 positive and negative reviews.
-Data source: <a href="https://www.cs.jhu.edu/%7Emdredze/datasets/sentiment/index2.html">https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html</a></p>
+<p>Books review data from Amazon which includes 3189 positive and negative reviews.</p>
+
+<p>Data source: <a href="https://www.cs.jhu.edu/%7Emdredze/datasets/sentiment/index2.html">https://www.cs.jhu.edu/~mdredze/datasets/sentiment/index2.html</a></p>
 
 <pre><code>book&lt;-read.csv("assignment8/review.csv",header=T,stringsAsFactors = F)
 
@@ -89,8 +90,9 @@ vocab &lt;- names(term.table)
 documents &lt;- lapply(doc.list, get.terms)
 </code></pre>
 
-<p><strong>Using the R package 'lda' for model fitting</strong>
-Use LAD method to anaysis for 20 topics and iterate 5000 times, and record the time that spent.
+<p><strong>Using the R package 'lda' for model fitting</strong></p>
+
+<p>Use LAD method to anaysis for 20 topics and iterate 5000 times, and record the time that spent.
     K &lt;- 20 #topic number
     G &lt;- 5000 #iteration number 
     alpha &lt;- 0.02
@@ -106,8 +108,9 @@ t2 &lt;- Sys.time()
 t2-t1
 </code></pre>
 
-<p><strong>visualization</strong>
-Use LADvis package to do the visualization. </p>
+<p><strong>visualization</strong></p>
+
+<p>Use LADvis package to do the visualization. </p>
 
 <pre><code>#document-term distribution matrix
 theta &lt;- t(apply(fit$document_sums + alpha, 2, function(x) x/sum(x)))
@@ -125,7 +128,7 @@ json &lt;- createJSON(phi = phi,
 serVis(json, out.dir = 'vis', open.browser = TRUE)
 </code></pre>
 
-<p>Code:</p>
+<p>R Code:<a href="http://jiangshiying.github.io/assignment8.r">http://jiangshiying.github.io/assignment8.r</a></p>
 
       <footer class="site-footer">
 
